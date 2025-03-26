@@ -1,3 +1,6 @@
+import 'package:aa_fb_basics/login_service.dart';
+import 'package:aa_fb_basics/main_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -7,20 +10,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MainApp());
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  final LoginService loginService = LoginService(auth: auth);
+
+  runApp(MainApp(loginService: loginService));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final LoginService loginService;
+
+  const MainApp({super.key, required this.loginService});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      home: MainScreen(loginService: loginService),
     );
   }
 }
